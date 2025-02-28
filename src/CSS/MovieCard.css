@@ -1,7 +1,8 @@
 .movie-card {
   margin-bottom: 2vh;
-  border-radius: 10px;
-  box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #332222, #1A1A1A);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .movie-poster {
@@ -12,11 +13,12 @@
 
 img {
   margin-bottom: 10px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 12px 12px 0 0;
+  width: 100%;
 }
 
 .movie-info {
-  padding: 12px;
+  padding: 14px;
 }
 
 .controls-container {
@@ -26,32 +28,50 @@ img {
   padding: 0 1rem;
 }
 
+/* Improved Trailer Button */
 .trailer-btn {
-  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(to right, #a91d1d, #a50914);
   color: white;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
   font-weight: bold;
-  gap: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .trailer-btn:hover {
-  background: #e50914;
+  background: linear-gradient(to right, #e50914, #ff1a1a);
+  transform: scale(1.08);
+}
+
+/* Improved Favorite Button */
+.favorite-btn {
+  color: white;
+  background-color: #092a4b;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.favorite-btn:hover {
+  background-color: #1e90ff;
   transform: scale(1.05);
-  border: none;
 }
 
-.trailer-btn:active {
-  border: none;
-}
-
-.trailer-btn:focus {
+.favorite-btn:focus, .trailer-btn:focus {
   outline: none;
+  border: none;
 }
 
-/* Update modal styles for fullscreen */
+.favorite-btn:active, .trailer-btn:active {
+  outline: none;
+  border: none;
+}
+
+/* Fullscreen Modal Styling */
 .trailer-modal {
   position: fixed;
   top: 0;
@@ -79,6 +99,7 @@ img {
   border: none;
 }
 
+/* Improved Close Button */
 .close {
   position: absolute;
   top: -2.2%;
@@ -101,13 +122,18 @@ img {
   z-index: 100;
 }
 
-/* Mobile responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
+  .movie-card {
+    margin-bottom: 1.5vh;
+  }
+
   .trailer-btn {
     padding: 6px 12px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
   }
-  
+
   .close {
     top: 10px;
     right: 10px;

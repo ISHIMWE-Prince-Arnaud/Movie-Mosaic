@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import MovieCard from '../Components/MovieCard';
-import { searchMovies, getPopularMovies } from '../services/api';
+import { searchMovies, getPopularMovies } from '../Services/API';
 import "../CSS/Home.css"
 
 function Home() {
