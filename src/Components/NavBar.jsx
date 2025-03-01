@@ -3,7 +3,13 @@ import { useState } from "react";
 import "../CSS/NavBar.css";
 
 function NavBar() {
+  const [selectedGenre, setSelectedGenre] = useState("Other Genres");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleGenreSelect = (genre) => {
+    setSelectedGenre(genre);
+    setIsDropdownOpen(false); // Close dropdown after selection
+  };
 
   return (
     <nav className="navbar">
@@ -24,19 +30,19 @@ function NavBar() {
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
         >
-          <button className="dropdown-btn">Other Genres</button>
+          <button className="dropdown-btn">{selectedGenre} ▾</button>
           {isDropdownOpen && (
             <div className="dropdown-menu">
-              <NavLink to="/comedy" className="dropdown-item">Comedy</NavLink>
-              <NavLink to="/sci-fi" className="dropdown-item">Sci-Fi</NavLink>
-              <NavLink to="/romance" className="dropdown-item">Romance</NavLink>
-              <NavLink to="/thriller" className="dropdown-item">Thriller</NavLink>
-              <NavLink to="/fantasy" className="dropdown-item">Fantasy</NavLink>
-              <NavLink to="/animation" className="dropdown-item">Animation</NavLink>
-              <NavLink to="/documentary" className="dropdown-item">Documentary</NavLink>
-              <NavLink to="/mystery" className="dropdown-item">Mystery</NavLink>
-              <NavLink to="/adventure" className="dropdown-item">Adventure</NavLink>
-              <NavLink to="/crime" className="dropdown-item">Crime</NavLink>
+              <NavLink to="/comedy" className="dropdown-item" onClick={() => handleGenreSelect("Comedy")}>Comedy</NavLink>
+              <NavLink to="/sci-fi" className="dropdown-item" onClick={() => handleGenreSelect("Sci-Fi")}>Sci-Fi</NavLink>
+              <NavLink to="/romance" className="dropdown-item" onClick={() => handleGenreSelect("Romance")}>Romance</NavLink>
+              <NavLink to="/thriller" className="dropdown-item" onClick={() => handleGenreSelect("Thriller")}>Thriller</NavLink>
+              <NavLink to="/fantasy" className="dropdown-item" onClick={() => handleGenreSelect("Fantasy")}>Fantasy</NavLink>
+              <NavLink to="/animation" className="dropdown-item" onClick={() => handleGenreSelect("Animation")}>Animation</NavLink>
+              <NavLink to="/documentary" className="dropdown-item" onClick={() => handleGenreSelect("Documentary")}>Documentary</NavLink>
+              <NavLink to="/mystery" className="dropdown-item" onClick={() => handleGenreSelect("Mystery")}>Mystery</NavLink>
+              <NavLink to="/adventure" className="dropdown-item" onClick={() => handleGenreSelect("Adventure")}>Adventure</NavLink>
+              <NavLink to="/crime" className="dropdown-item" onClick={() => handleGenreSelect("Crime")}>Crime</NavLink>
             </div>
           )}
         </div>
