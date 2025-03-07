@@ -21,6 +21,10 @@ img {
   padding: 14px;
 }
 
+.movie-info h3, .movie-info p {
+  color: #fff;
+}
+
 .controls-container {
   display: flex;
   justify-content: space-between;
