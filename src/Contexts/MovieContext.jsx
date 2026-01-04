@@ -1,7 +1,10 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const MovieContext = createContext();
 
+// Allow exporting the hook from this non-component file for convenience
+// eslint-disable-next-line react-refresh/only-export-components
 export const useMovieContext = () => useContext(MovieContext);
 
 export const MovieProvider = ({ children }) => {
@@ -45,9 +48,12 @@ export const MovieProvider = ({ children }) => {
         handleAddFavorite,
         handleRemoveFavorite,
         isFavorite,
-      }}
-    >
+      }}>
       {children}
     </MovieContext.Provider>
   );
+};
+
+MovieProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
