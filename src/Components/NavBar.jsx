@@ -1,6 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import "../CSS/NavBar.css";
 
 function NavBar() {
   const [selectedGenre, setSelectedGenre] = useState("Other Genres");

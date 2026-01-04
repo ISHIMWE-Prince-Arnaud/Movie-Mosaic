@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "../CSS/MovieCard.css";
 import { useMovieContext } from "../Contexts/MovieContext";
 import { getMovieVideos } from "../Services/API";
 

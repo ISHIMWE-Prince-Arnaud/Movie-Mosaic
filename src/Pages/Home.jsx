@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import MovieCard from "../Components/MovieCard";
 import { searchMovies, getPopularMovies } from "../Services/API";
-import "../CSS/Home.css";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");

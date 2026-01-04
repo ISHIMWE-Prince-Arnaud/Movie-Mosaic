@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import MovieCard from "./MovieCard";
-import "../CSS/Home.css";
 import { useGenreMovies } from "../hooks/useGenreMovies";
 
 function GenrePage({
