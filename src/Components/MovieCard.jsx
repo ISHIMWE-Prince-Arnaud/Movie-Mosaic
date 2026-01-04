@@ -12,9 +12,16 @@ function MovieCard({ movie }) {
 
   const isMovieFavorite = isFavorite(movie.id);
 
+  const posterFallback = "https://via.placeholder.com/500x750?text=No+Image";
   const posterSrc = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "https://via.placeholder.com/500x750?text=No+Image";
+    : posterFallback;
+
+  const handleImgError = (event) => {
+    if (event.target.src !== posterFallback) {
+      event.target.src = posterFallback;
+    }
+  };
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
@@ -66,7 +73,7 @@ function MovieCard({ movie }) {
   return (
     <div className="movie-card">
       <div className="movie-poster">
-        <img src={posterSrc} alt={movie.title} />
+        <img src={posterSrc} alt={movie.title} onError={handleImgError} />
         <div className="movie-overlay">
           <div className="controls-container">
             <button
