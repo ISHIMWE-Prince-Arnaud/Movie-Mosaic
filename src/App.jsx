@@ -20,28 +20,30 @@ import CrimeMovies from "./Pages/CrimeMovies";
 function App() {
   return (
     <MovieProvider>
-      <NavBar />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/action" element={<ActionMovies />} />
-          <Route path="/horror" element={<HorrorMovies />} />
-          <Route path="/drama" element={<DramaMovies />} />
-          <Route path="/favorite" element={<Favorite />} />
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        <NavBar />
+        <main className="mx-auto max-w-6xl px-4 pb-12 pt-6">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/action" element={<ActionMovies />} />
+            <Route path="/horror" element={<HorrorMovies />} />
+            <Route path="/drama" element={<DramaMovies />} />
+            <Route path="/favorite" element={<Favorite />} />
 
-          {/* Other Genres in Dropdown */}
-          <Route path="/comedy" element={<ComedyMovies />} />
-          <Route path="/sci-fi" element={<SciFiMovies />} />
-          <Route path="/romance" element={<RomanceMovies />} />
-          <Route path="/thriller" element={<ThrillerMovies />} />
-          <Route path="/fantasy" element={<FantasyMovies />} />
-          <Route path="/animation" element={<AnimationMovies />} />
-          <Route path="/documentary" element={<DocumentaryMovies />} />
-          <Route path="/mystery" element={<MysteryMovies />} />
-          <Route path="/adventure" element={<AdventureMovies />} />
-          <Route path="/crime" element={<CrimeMovies />} />
-        </Routes>
-      </main>
+            {/* Other Genres in Dropdown */}
+            <Route path="/comedy" element={<ComedyMovies />} />
+            <Route path="/sci-fi" element={<SciFiMovies />} />
+            <Route path="/romance" element={<RomanceMovies />} />
+            <Route path="/thriller" element={<ThrillerMovies />} />
+            <Route path="/fantasy" element={<FantasyMovies />} />
+            <Route path="/animation" element={<AnimationMovies />} />
+            <Route path="/documentary" element={<DocumentaryMovies />} />
+            <Route path="/mystery" element={<MysteryMovies />} />
+            <Route path="/adventure" element={<AdventureMovies />} />
+            <Route path="/crime" element={<CrimeMovies />} />
+          </Routes>
+        </main>
+      </div>
     </MovieProvider>
   );
 }
