@@ -6,6 +6,7 @@ function HorrorMovies() {
     <GenrePage
       placeholder="Search horror movies..."
       fetchGenreMovies={getHorrorMovies}
+      genreId={27}
       searchWithinGenre
     />
   );
