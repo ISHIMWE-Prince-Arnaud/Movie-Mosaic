@@ -15,6 +15,12 @@ function MovieCard({ movie }) {
   const posterSrc = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : posterFallback;
+  const rating =
+    typeof movie.vote_average === "number"
+      ? movie.vote_average.toFixed(1)
+      : "N/A";
+  const voteCount =
+    typeof movie.vote_count === "number" ? movie.vote_count : undefined;
 
   const handleImgError = (event) => {
     if (event.target.src !== posterFallback) {
@@ -114,9 +120,18 @@ function MovieCard({ movie }) {
         <h3 className="line-clamp-2 text-lg font-semibold text-slate-50">
           {movie.title}
         </h3>
-        <p className="text-sm text-slate-400">
-          {movie.release_date || "Release date TBD"}
-        </p>
+        <div className="flex items-center justify-between text-sm text-slate-400">
+          <p>{movie.release_date || "Release date TBD"}</p>
+          <div className="inline-flex items-center gap-1 rounded-full border border-amber-300/40 bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-200">
+            <span>⭐</span>
+            <span>{rating}</span>
+            {voteCount !== undefined && (
+              <span className="text-[11px] text-amber-100/80">
+                ({voteCount})
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       {trailerKey && (
@@ -154,5 +169,7 @@ MovieCard.propTypes = {
     title: PropTypes.string,
     poster_path: PropTypes.string,
     release_date: PropTypes.string,
+    vote_average: PropTypes.number,
+    vote_count: PropTypes.number,
   }).isRequired,
 };
