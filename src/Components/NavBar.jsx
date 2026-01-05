@@ -25,7 +25,7 @@ function NavBar() {
                 isActive ? "bg-slate-800 text-amber-200" : ""
               }`
             }>
-            Trending
+            Home
           </NavLink>
           <NavLink
             to="/action"
