@@ -37,22 +37,31 @@ function NavBar() {
             Action
           </NavLink>
           <NavLink
-            to="/horror"
+            to="/thriller"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
               }`
             }>
-            Horror
+            Thriller
           </NavLink>
           <NavLink
-            to="/drama"
+            to="/sci-fi"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
               }`
             }>
-            Drama
+            Sci-Fi
+          </NavLink>
+          <NavLink
+            to="/crime"
+            className={({ isActive }) =>
+              `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
+                isActive ? "bg-slate-800 text-amber-200" : ""
+              }`
+            }>
+            Crime
           </NavLink>
           <NavLink
             to="/favorite"
@@ -75,15 +84,14 @@ function NavBar() {
               <div className="absolute right-0 mt-2 grid min-w-[180px] gap-1 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl">
                 {[
                   ["Comedy", "/comedy"],
-                  ["Sci-Fi", "/sci-fi"],
+                  ["Horror", "/horror"],
+                  ["Drama", "/drama"],
                   ["Romance", "/romance"],
-                  ["Thriller", "/thriller"],
                   ["Fantasy", "/fantasy"],
                   ["Animation", "/animation"],
                   ["Documentary", "/documentary"],
                   ["Mystery", "/mystery"],
                   ["Adventure", "/adventure"],
-                  ["Crime", "/crime"],
                 ].map(([label, path]) => (
                   <NavLink
                     key={path}
