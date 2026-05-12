@@ -4,6 +4,7 @@ import Favorite from "./pages/Favorite";
 import NavBar from "./components/NavBar";
 import { MovieProvider } from "./contexts/MovieContext";
 import GenrePage from "./components/GenrePage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/favorite" element={<Favorite />} />
             <Route path="/genre/:slug" element={<GenrePage />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </div>
