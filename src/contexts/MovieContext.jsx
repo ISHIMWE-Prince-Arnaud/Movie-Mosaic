@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 
 const MovieContext = createContext();
@@ -26,7 +26,7 @@ export const MovieProvider = ({ children }) => {
   // Add a movie to favorites (prevent duplicates)
   const handleAddFavorite = (movie) => {
     setFavorites((favorites) => {
-      if (favorites.some((fav) => fav.id === movie.id)) return favorites; // Prevent duplicates
+      if (favoriteIds.has(movie.id)) return favorites; // Prevent duplicates using O(1) lookup
       return [...favorites, movie];
     });
   };
@@ -36,9 +36,15 @@ export const MovieProvider = ({ children }) => {
     setFavorites((favorites) => favorites.filter((fav) => fav.id !== movieId));
   };
 
-  // Check if a movie is in favorites
+  // Memoize favorite IDs for O(1) lookups
+  const favoriteIds = useMemo(
+    () => new Set(favorites.map((f) => f.id)),
+    [favorites],
+  );
+
+  // Check if a movie is in favorites (O(1) lookup)
   const isFavorite = (movieId) => {
-    return favorites.some((fav) => fav.id === movieId);
+    return favoriteIds.has(movieId);
   };
 
   return (
