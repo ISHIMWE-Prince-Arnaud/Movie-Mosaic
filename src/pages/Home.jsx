@@ -7,45 +7,66 @@ function Home() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(false);
 
-  const performSearch = useCallback(async (query) => {
+  const performSearch = useCallback(async (query, signal) => {
     try {
       setLoading(true);
 
       if (!query) {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-        setError(null);
+        const popularMovies = await getPopularMovies(signal);
+        // Don't update state if request was aborted
+        if (!signal?.aborted) {
+          setMovies(popularMovies);
+          setError(null);
+        }
         return;
       }
 
-      const results = await searchMovies(query);
+      const results = await searchMovies(query, signal);
 
-      if (results.length > 0) {
-        setMovies(results);
-        setError(null);
-      } else {
-        setMovies([]);
-        setError("No movies found");
+      // Don't update state if request was aborted
+      if (!signal?.aborted) {
+        if (results.length > 0) {
+          setMovies(results);
+          setError(null);
+          setIsEmpty(false);
+        } else {
+          setMovies([]);
+          setError(null);
+          setIsEmpty(true);
+        }
       }
     } catch (error) {
-      console.error(error);
-      if (!query) {
-        setError("Failed to load movies");
-      } else {
-        setError("Search failed");
+      // Don't update state if request was aborted
+      if (!signal?.aborted) {
+        console.error(error);
+        if (!query) {
+          setError("Failed to load movies");
+        } else {
+          setError("Search failed");
+        }
+        setMovies([]);
+        setIsEmpty(false);
       }
-      setMovies([]);
     } finally {
-      setLoading(false);
+      // Don't update state if request was aborted
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      performSearch(searchQuery.trim());
-    }, 300);
-    return () => clearTimeout(handler);
+    const controller = new AbortController();
+    const handler = setTimeout(
+      () => performSearch(searchQuery.trim(), controller.signal),
+      300,
+    );
+    return () => {
+      clearTimeout(handler);
+      controller.abort();
+    };
   }, [searchQuery, performSearch]);
 
   const handleInputChange = (e) => {
@@ -53,7 +74,8 @@ function Home() {
   };
 
   const handleSearchClick = () => {
-    performSearch(searchQuery.trim());
+    const controller = new AbortController();
+    performSearch(searchQuery.trim(), controller.signal);
   };
 
   return (
@@ -80,8 +102,13 @@ function Home() {
           </div>
         )}
         {error && (
-          <div className="rounded-lg border border-amber-400/60 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          <div className="rounded-lg border border-red-400/60 bg-red-500/10 px-3 py-2 text-sm text-red-100">
             {error}
+          </div>
+        )}
+        {isEmpty && !error && (
+          <div className="rounded-lg border border-slate-600/60 bg-slate-800/50 px-3 py-2 text-sm text-slate-300">
+            No movies found
           </div>
         )}
       </div>

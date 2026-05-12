@@ -9,6 +9,7 @@ function MovieCard({ movie }) {
     useMovieContext();
   const [trailerKey, setTrailerKey] = useState(null);
   const [trailerError, setTrailerError] = useState(null);
+  const [isLoadingTrailer, setIsLoadingTrailer] = useState(false);
 
   const isMovieFavorite = isFavorite(movie.id);
 
@@ -41,6 +42,7 @@ function MovieCard({ movie }) {
   const handleTrailerClick = async (e) => {
     e.stopPropagation();
     setTrailerError(null);
+    setIsLoadingTrailer(true);
     try {
       const videos = await getMovieVideos(movie.id);
       const trailer = videos.find(
@@ -56,6 +58,8 @@ function MovieCard({ movie }) {
       console.error("Error fetching trailer:", error);
       setTrailerKey(null);
       setTrailerError("Trailer not available");
+    } finally {
+      setIsLoadingTrailer(false);
     }
   };
 
@@ -104,17 +108,20 @@ function MovieCard({ movie }) {
           </div>
           <div className="pointer-events-auto flex items-center justify-center gap-3">
             <button
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg transition hover:bg-amber-400"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg transition hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleTrailerClick}
+              disabled={isLoadingTrailer}
               aria-label="Watch trailer">
-              ▶️ Trailer
+              {isLoadingTrailer ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950 border-t-transparent" />
+                  Loading...
+                </>
+              ) : (
+                <>▶️ Trailer</>
+              )}
             </button>
           </div>
-          {trailerError && (
-            <div className="pointer-events-none rounded-lg bg-slate-950/70 px-3 py-2 text-center text-xs font-semibold text-amber-200">
-              {trailerError}
-            </div>
-          )}
         </div>
       </Link>
       <Link
@@ -140,7 +147,6 @@ function MovieCard({ movie }) {
           </div>
         </div>
       </Link>
-
       {trailerKey && (
         <div
           className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm"
@@ -161,6 +167,29 @@ function MovieCard({ movie }) {
               allowFullScreen
               className="h-[60vh] w-full"
             />
+          </div>
+        </div>
+      )}
+      {trailerError && (
+        <div
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={closeTrailer}>
+          <div
+            className="relative w-full max-w-md overflow-hidden rounded-2xl bg-slate-950 shadow-2xl ring-1 ring-slate-800 p-8"
+            onClick={(e) => e.stopPropagation()}>
+            <button
+              className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/80 text-xl text-slate-100 transition hover:bg-slate-700"
+              onClick={closeTrailer}
+              aria-label="Close error message">
+              ×
+            </button>
+            <div className="text-center">
+              <div className="mb-4 text-4xl">🎬</div>
+              <h3 className="mb-2 text-lg font-semibold text-slate-100">
+                Trailer Not Available
+              </h3>
+              <p className="text-slate-400">{trailerError}</p>
+            </div>
           </div>
         </div>
       )}

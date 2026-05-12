@@ -17,6 +17,7 @@ function GenrePage() {
     movies,
     loading,
     error,
+    isEmpty,
     handleSearchClick,
   } = useGenreMovies({
     genreId: genre?.id,
@@ -60,8 +61,13 @@ function GenrePage() {
           </div>
         )}
         {error && (
-          <div className="rounded-lg border border-amber-400/60 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          <div className="rounded-lg border border-red-400/60 bg-red-500/10 px-3 py-2 text-sm text-red-100">
             {error}
+          </div>
+        )}
+        {isEmpty && !error && (
+          <div className="rounded-lg border border-slate-600/60 bg-slate-800/50 px-3 py-2 text-sm text-slate-300">
+            No movies found
           </div>
         )}
       </div>

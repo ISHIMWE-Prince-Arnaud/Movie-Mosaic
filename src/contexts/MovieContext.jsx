@@ -12,9 +12,11 @@ export const MovieProvider = ({ children }) => {
 
   // Load favorites from localStorage when the app starts
   useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+    try {
+      const stored = localStorage.getItem("favorites");
+      if (stored) setFavorites(JSON.parse(stored));
+    } catch {
+      localStorage.removeItem("favorites");
     }
   }, []);
 

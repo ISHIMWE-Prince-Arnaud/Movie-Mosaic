@@ -6,22 +6,26 @@ export const useGenreMovies = ({ genreId, searchWithinGenre = true }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(false);
 
-  const genreFetcher = useCallback(() => {
-    return getMoviesByGenre(genreId);
-  }, [genreId]);
+  const genreFetcher = useCallback(
+    (signal) => {
+      return getMoviesByGenre(genreId, signal);
+    },
+    [genreId],
+  );
 
   const performSearch = useCallback(
-    async (query) => {
+    async (query, signal) => {
       setLoading(true);
       setError(null);
       try {
         let results = [];
 
         if (!query) {
-          results = await genreFetcher();
+          results = await genreFetcher(signal);
         } else {
-          const searched = await searchMovies(query);
+          const searched = await searchMovies(query, signal);
           results =
             searchWithinGenre && genreId
               ? searched.filter((movie) =>
@@ -32,29 +36,42 @@ export const useGenreMovies = ({ genreId, searchWithinGenre = true }) => {
               : searched;
         }
 
-        setMovies(results);
-        setError(results.length ? null : "No movies found.");
+        if (!signal?.aborted) {
+          setMovies(results);
+          setError(null);
+          setIsEmpty(results.length === 0);
+        }
       } catch (err) {
-        console.error("Failed to fetch movies.", err);
-        setError("Failed to fetch movies.");
-        setMovies([]);
+        if (!signal?.aborted) {
+          console.error("Failed to fetch movies.", err);
+          setError("Failed to fetch movies.");
+          setMovies([]);
+          setIsEmpty(false);
+        }
       } finally {
-        setLoading(false);
+        if (!signal?.aborted) {
+          setLoading(false);
+        }
       }
     },
     [genreFetcher, searchWithinGenre, genreId],
   );
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      performSearch(searchQuery.trim());
-    }, 300);
-
-    return () => clearTimeout(handler);
+    const controller = new AbortController();
+    const handler = setTimeout(
+      () => performSearch(searchQuery.trim(), controller.signal),
+      300,
+    );
+    return () => {
+      clearTimeout(handler);
+      controller.abort();
+    };
   }, [searchQuery, performSearch]);
 
   const handleSearchClick = () => {
-    performSearch(searchQuery.trim());
+    const controller = new AbortController();
+    performSearch(searchQuery.trim(), controller.signal);
   };
 
   return {
@@ -63,6 +80,7 @@ export const useGenreMovies = ({ genreId, searchWithinGenre = true }) => {
     movies,
     loading,
     error,
+    isEmpty,
     handleSearchClick,
   };
 };

@@ -8,12 +8,13 @@ const getApiKey = () => {
   return API_KEY;
 };
 
-export const searchMovies = async (query) => {
+export const searchMovies = async (query, signal) => {
   try {
     const response = await fetch(
       `${BASE_URL}/search/movie?api_key=${getApiKey()}&query=${encodeURIComponent(
         query,
       )}&include_adult=false&language=en-US&page=1`,
+      { signal },
     );
     if (!response.ok) throw new Error("Movie search failed");
     const data = await response.json();
@@ -24,10 +25,11 @@ export const searchMovies = async (query) => {
   }
 };
 
-export const getPopularMovies = async () => {
+export const getPopularMovies = async (signal) => {
   try {
     const response = await fetch(
       `${BASE_URL}/movie/popular?api_key=${getApiKey()}&language=en-US&page=1`,
+      { signal },
     );
     if (!response.ok) throw new Error("Failed to fetch popular movies");
     const data = await response.json();
@@ -53,10 +55,11 @@ export const getMovieVideos = async (movieId) => {
   }
 };
 
-export const getMoviesByGenre = async (genreId) => {
+export const getMoviesByGenre = async (genreId, signal) => {
   try {
     const response = await fetch(
       `${BASE_URL}/discover/movie?api_key=${getApiKey()}&with_genres=${genreId}&language=en-US&page=1`,
+      { signal },
     );
     if (!response.ok) throw new Error("Failed to fetch movies by genre");
     const data = await response.json();
