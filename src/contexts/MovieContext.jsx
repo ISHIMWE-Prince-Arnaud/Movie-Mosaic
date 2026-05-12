@@ -44,9 +44,16 @@ export const MovieProvider = ({ children }) => {
     [favorites],
   );
 
+  // Create a Map for O(1) lookups - more efficient than Set
+  const favoriteMap = useMemo(() => {
+    const map = new Map();
+    favorites.forEach((movie) => map.set(movie.id, true));
+    return map;
+  }, [favorites]);
+
   // Check if a movie is in favorites (O(1) lookup)
   const isFavorite = (movieId) => {
-    return favoriteIds.has(movieId);
+    return favoriteMap.has(movieId);
   };
 
   return (

@@ -13,9 +13,15 @@ function MovieCard({ movie }) {
 
   const isMovieFavorite = isFavorite(movie.id);
 
-  const posterFallback = "https://placehold.co/500x750?text=No+Image";
+  const posterFallback = "https://placehold.co/342x513?text=No+Image";
   const posterSrc = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+    : posterFallback;
+
+  const posterSrcSet = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w92${movie.poster_path} 185w,
+       https://image.tmdb.org/t/p/w185${movie.poster_path} 370w,
+       https://image.tmdb.org/t/p/w342${movie.poster_path} 500w`
     : posterFallback;
   const rating =
     typeof movie.vote_average === "number"
@@ -87,8 +93,12 @@ function MovieCard({ movie }) {
         className="relative block aspect-[2/3] overflow-hidden bg-slate-800">
         <img
           src={posterSrc}
+          srcSet={posterSrcSet}
+          sizes="(max-width: 640px) 185px, (max-width: 768px) 370px, 500px"
           alt={movie.title}
           onError={handleImgError}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />

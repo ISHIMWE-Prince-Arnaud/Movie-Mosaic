@@ -1,11 +1,24 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Favorite from "./pages/Favorite";
+import { Suspense, lazy } from "react";
 import NavBar from "./components/NavBar";
 import { MovieProvider } from "./contexts/MovieContext";
-import GenrePage from "./components/GenrePage";
-import NotFound from "./pages/NotFound";
-import MovieDetail from "./pages/MovieDetail";
+
+// Lazy load components for code splitting
+const Home = lazy(() => import("./pages/Home"));
+const Favorite = lazy(() => import("./pages/Favorite"));
+const GenrePage = lazy(() => import("./components/GenrePage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const MovieDetail = lazy(() => import("./pages/MovieDetail"));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center py-12">
+    <div className="flex items-center gap-3 text-amber-200">
+      <span className="h-6 w-6 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
+      <span>Loading...</span>
+    </div>
+  </div>
+);
 
 function App() {
   return (
@@ -13,13 +26,15 @@ function App() {
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <NavBar />
         <main className="mx-auto max-w-6xl px-4 pb-12 pt-6">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorite" element={<Favorite />} />
-            <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/genre/:slug" element={<GenrePage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/favorite" element={<Favorite />} />
+              <Route path="/movie/:id" element={<MovieDetail />} />
+              <Route path="/genre/:slug" element={<GenrePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </MovieProvider>
