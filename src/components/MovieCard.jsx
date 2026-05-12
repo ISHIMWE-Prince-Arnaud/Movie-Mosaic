@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useMovieContext } from "../Contexts/MovieContext";
-import { getMovieVideos } from "../Services/API";
+import { useMovieContext } from "../contexts/MovieContext";
+import { getMovieVideos } from "../services/api";
 
 function MovieCard({ movie }) {
   const { isFavorite, handleAddFavorite, handleRemoveFavorite } =
@@ -43,7 +43,7 @@ function MovieCard({ movie }) {
     try {
       const videos = await getMovieVideos(movie.id);
       const trailer = videos.find(
-        (video) => video.type === "Trailer" && video.site === "YouTube"
+        (video) => video.type === "Trailer" && video.site === "YouTube",
       );
       if (trailer) {
         setTrailerKey(trailer.key);

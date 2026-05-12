@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { searchMovies, getMoviesByGenre } from "../Services/API";
+import { searchMovies, getMoviesByGenre } from "../services/api";
 
 export const useGenreMovies = ({
   genreId,
@@ -32,7 +32,7 @@ export const useGenreMovies = ({
               ? searched.filter((movie) =>
                   Array.isArray(movie?.genre_ids)
                     ? movie.genre_ids.includes(genreId)
-                    : false
+                    : false,
                 )
               : searched;
         }
@@ -47,7 +47,7 @@ export const useGenreMovies = ({
         setLoading(false);
       }
     },
-    [genreFetcher, searchWithinGenre, genreId]
+    [genreFetcher, searchWithinGenre, genreId],
   );
 
   useEffect(() => {

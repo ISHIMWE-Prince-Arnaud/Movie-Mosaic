@@ -1,5 +1,5 @@
-import GenrePage from "../Components/GenrePage";
-import { getDramaMovies } from "../Services/API";
+import GenrePage from "../components/GenrePage";
+import { getDramaMovies } from "../services/api";
 
 function DramaMovies() {
   return (

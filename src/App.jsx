@@ -1,21 +1,21 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./Pages/Home";
-import Favorite from "./Pages/Favorite";
-import NavBar from "./Components/NavBar";
-import { MovieProvider } from "./Contexts/MovieContext";
-import ActionMovies from "./Pages/ActionMovies";
-import HorrorMovies from "./Pages/HorrorMovies";
-import DramaMovies from "./Pages/DramaMovies";
-import ComedyMovies from "./Pages/ComedyMovies";
-import SciFiMovies from "./Pages/SciFiMovies";
-import RomanceMovies from "./Pages/RomanceMovies";
-import ThrillerMovies from "./Pages/ThrillerMovies";
-import FantasyMovies from "./Pages/FantasyMovies";
-import AnimationMovies from "./Pages/AnimationMovies";
-import DocumentaryMovies from "./Pages/DocumentaryMovies";
-import MysteryMovies from "./Pages/MysteryMovies";
-import AdventureMovies from "./Pages/AdventureMovies";
-import CrimeMovies from "./Pages/CrimeMovies";
+import Home from "./pages/Home";
+import Favorite from "./pages/Favorite";
+import NavBar from "./components/NavBar";
+import { MovieProvider } from "./contexts/MovieContext";
+import ActionMovies from "./pages/ActionMovies";
+import HorrorMovies from "./pages/HorrorMovies";
+import DramaMovies from "./pages/DramaMovies";
+import ComedyMovies from "./pages/ComedyMovies";
+import SciFiMovies from "./pages/SciFiMovies";
+import RomanceMovies from "./pages/RomanceMovies";
+import ThrillerMovies from "./pages/ThrillerMovies";
+import FantasyMovies from "./pages/FantasyMovies";
+import AnimationMovies from "./pages/AnimationMovies";
+import DocumentaryMovies from "./pages/DocumentaryMovies";
+import MysteryMovies from "./pages/MysteryMovies";
+import AdventureMovies from "./pages/AdventureMovies";
+import CrimeMovies from "./pages/CrimeMovies";
 
 function App() {
   return (

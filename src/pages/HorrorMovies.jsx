@@ -1,5 +1,5 @@
-import GenrePage from "../Components/GenrePage";
-import { getHorrorMovies } from "../Services/API";
+import GenrePage from "../components/GenrePage";
+import { getHorrorMovies } from "../services/api";
 
 function HorrorMovies() {
   return (

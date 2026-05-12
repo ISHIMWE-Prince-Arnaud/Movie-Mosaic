@@ -1,4 +1,4 @@
-import GenrePage from "../Components/GenrePage";
+import GenrePage from "../components/GenrePage";
 
 function AnimationMovies() {
   return (

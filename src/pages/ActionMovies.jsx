@@ -1,5 +1,5 @@
-import GenrePage from "../Components/GenrePage";
-import { getActionMovies } from "../Services/API";
+import GenrePage from "../components/GenrePage";
+import { getActionMovies } from "../services/api";
 
 function ActionMovies() {
   return (
