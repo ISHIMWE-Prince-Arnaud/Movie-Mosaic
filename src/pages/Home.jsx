@@ -57,21 +57,6 @@ function Home() {
     performSearch(searchQuery.trim());
   };
 
-  // Initial load of popular movies
-  useEffect(() => {
-    const loadInitialMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (error) {
-        console.error(error);
-        setError("Failed to load initial movies");
-      }
-    };
-
-    loadInitialMovies();
-  }, []);
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 rounded-2xl bg-slate-900/60 p-4 shadow-lg ring-1 ring-slate-800">
