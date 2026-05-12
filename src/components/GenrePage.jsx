@@ -1,13 +1,15 @@
-import PropTypes from "prop-types";
+import { useParams, useNavigate } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import { useGenreMovies } from "../hooks/useGenreMovies";
+import { getGenreBySlug } from "../config/genres";
+import { getMoviesByGenre } from "../services/api";
 
-function GenrePage({
-  placeholder,
-  genreId,
-  fetchGenreMovies,
-  searchWithinGenre = true,
-}) {
+function GenrePage() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+
+  const genre = getGenreBySlug(slug);
+
   const {
     searchQuery,
     setSearchQuery,
@@ -15,7 +17,16 @@ function GenrePage({
     loading,
     error,
     handleSearchClick,
-  } = useGenreMovies({ genreId, fetchGenreMovies, searchWithinGenre });
+  } = useGenreMovies({
+    genreId: genre?.id,
+    fetchGenreMovies: () => getMoviesByGenre(genre?.id),
+    searchWithinGenre: true,
+  });
+
+  if (!genre) {
+    navigate("/");
+    return null;
+  }
 
   return (
     <div className="space-y-6">
@@ -23,7 +34,7 @@ function GenrePage({
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             type="text"
-            placeholder={placeholder}
+            placeholder={genre.placeholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
@@ -55,12 +66,5 @@ function GenrePage({
     </div>
   );
 }
-
-GenrePage.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  genreId: PropTypes.number,
-  fetchGenreMovies: PropTypes.func,
-  searchWithinGenre: PropTypes.bool,
-};
 
 export default GenrePage;

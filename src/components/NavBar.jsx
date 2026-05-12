@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
+import { GENRES } from "../config/genres";
 
 function NavBar() {
   const [selectedGenre, setSelectedGenre] = useState("Other Genres");
@@ -28,7 +29,7 @@ function NavBar() {
             Home
           </NavLink>
           <NavLink
-            to="/action"
+            to="/genre/action"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
@@ -37,7 +38,7 @@ function NavBar() {
             Action
           </NavLink>
           <NavLink
-            to="/thriller"
+            to="/genre/thriller"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
@@ -46,7 +47,7 @@ function NavBar() {
             Thriller
           </NavLink>
           <NavLink
-            to="/sci-fi"
+            to="/genre/sci-fi"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
@@ -55,7 +56,7 @@ function NavBar() {
             Sci-Fi
           </NavLink>
           <NavLink
-            to="/crime"
+            to="/genre/crime"
             className={({ isActive }) =>
               `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
                 isActive ? "bg-slate-800 text-amber-200" : ""
@@ -82,27 +83,22 @@ function NavBar() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 grid min-w-[180px] gap-1 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl">
-                {[
-                  ["Comedy", "/comedy"],
-                  ["Horror", "/horror"],
-                  ["Drama", "/drama"],
-                  ["Romance", "/romance"],
-                  ["Fantasy", "/fantasy"],
-                  ["Animation", "/animation"],
-                  ["Documentary", "/documentary"],
-                  ["Mystery", "/mystery"],
-                  ["Adventure", "/adventure"],
-                ].map(([label, path]) => (
+                {GENRES.filter(
+                  (genre) =>
+                    !["action", "thriller", "sci-fi", "crime"].includes(
+                      genre.slug,
+                    ),
+                ).map((genre) => (
                   <NavLink
-                    key={path}
-                    to={path}
+                    key={genre.slug}
+                    to={`/genre/${genre.slug}`}
                     className={({ isActive }) =>
                       `rounded-lg px-3 py-2 text-left text-sm transition hover:bg-slate-800 hover:text-amber-200 ${
                         isActive ? "bg-slate-800 text-amber-200" : ""
                       }`
                     }
-                    onClick={() => handleGenreSelect(label)}>
-                    {label}
+                    onClick={() => handleGenreSelect(genre.label)}>
+                    {genre.label}
                   </NavLink>
                 ))}
               </div>
