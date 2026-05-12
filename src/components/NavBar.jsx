@@ -1,13 +1,22 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { GENRES } from "../config/genres";
 
 function NavBar() {
-  const [selectedGenre, setSelectedGenre] = useState("Other Genres");
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleGenreSelect = (genre) => {
-    setSelectedGenre(genre);
+  // Derive current genre from URL
+  const getCurrentGenreLabel = () => {
+    if (location.pathname.startsWith("/genre/")) {
+      const slug = location.pathname.split("/")[2];
+      const genre = GENRES.find((g) => g.slug === slug);
+      return genre?.label || "Other Genres";
+    }
+    return "Other Genres";
+  };
+
+  const handleGenreSelect = () => {
     setIsDropdownOpen(false); // Close dropdown after selection
   };
 
@@ -79,7 +88,7 @@ function NavBar() {
             onMouseEnter={() => setIsDropdownOpen(true)}
             onMouseLeave={() => setIsDropdownOpen(false)}>
             <button className="inline-flex items-center gap-1 rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
-              {selectedGenre} ▾
+              {getCurrentGenreLabel()} ▾
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 grid min-w-[180px] gap-1 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl">
@@ -97,7 +106,7 @@ function NavBar() {
                         isActive ? "bg-slate-800 text-amber-200" : ""
                       }`
                     }
-                    onClick={() => handleGenreSelect(genre.label)}>
+                    onClick={() => handleGenreSelect()}>
                     {genre.label}
                   </NavLink>
                 ))}

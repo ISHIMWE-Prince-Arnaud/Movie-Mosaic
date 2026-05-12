@@ -1,20 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { searchMovies, getMoviesByGenre } from "../services/api";
 
-export const useGenreMovies = ({
-  genreId,
-  fetchGenreMovies,
-  searchWithinGenre = true,
-}) => {
+export const useGenreMovies = ({ genreId, searchWithinGenre = true }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const genreFetcher = useCallback(() => {
-    const fn = fetchGenreMovies ?? (() => getMoviesByGenre(genreId));
-    return fn();
-  }, [fetchGenreMovies, genreId]);
+    return getMoviesByGenre(genreId);
+  }, [genreId]);
 
   const performSearch = useCallback(
     async (query) => {

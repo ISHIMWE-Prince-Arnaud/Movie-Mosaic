@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import { useGenreMovies } from "../hooks/useGenreMovies";
@@ -23,6 +24,13 @@ function GenrePage() {
     searchWithinGenre: true,
   });
 
+  const handleInputChange = useCallback(
+    (e) => {
+      setSearchQuery(e.target.value);
+    },
+    [setSearchQuery],
+  );
+
   if (!genre) {
     navigate("/");
     return null;
@@ -36,7 +44,7 @@ function GenrePage() {
             type="text"
             placeholder={genre.placeholder}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleInputChange}
             className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
           />
           <button
