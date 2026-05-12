@@ -1,5 +1,5 @@
 {
-  "name": "react",
+  "name": "movie-mosaic",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.23",
     "postcss": "^8.5.6",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.5",

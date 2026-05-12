@@ -12,7 +12,7 @@ function MovieCard({ movie }) {
 
   const isMovieFavorite = isFavorite(movie.id);
 
-  const posterFallback = "https://via.placeholder.com/500x750?text=No+Image";
+  const posterFallback = "https://placehold.co/500x750?text=No+Image";
   const posterSrc = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : posterFallback;
@@ -78,7 +78,9 @@ function MovieCard({ movie }) {
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
-      <Link to={`/movie/${movie.id}`} className="relative block aspect-[2/3] overflow-hidden bg-slate-800">
+      <Link
+        to={`/movie/${movie.id}`}
+        className="relative block aspect-[2/3] overflow-hidden bg-slate-800">
         <img
           src={posterSrc}
           alt={movie.title}
@@ -88,9 +90,7 @@ function MovieCard({ movie }) {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
         <div className="absolute inset-0 flex flex-col justify-between p-3 opacity-0 transition duration-300 group-hover:opacity-100">
           <div className="flex items-start justify-between gap-2">
-            <span className="inline-flex items-center rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-200">
-              {movie.release_date || "Upcoming"}
-            </span>
+            <div className="flex-1" /> {/* Spacer for balance */}
             <button
               className={`pointer-events-auto rounded-full border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:border-amber-400 hover:text-amber-200 ${
                 isMovieFavorite ? "border-amber-400 bg-amber-500/20" : ""
@@ -117,12 +117,18 @@ function MovieCard({ movie }) {
           )}
         </div>
       </Link>
-      <Link to={`/movie/${movie.id}`} className="block space-y-1 p-4 transition hover:bg-slate-800/50">
+      <Link
+        to={`/movie/${movie.id}`}
+        className="block space-y-1 p-4 transition hover:bg-slate-800/50">
         <h3 className="line-clamp-2 text-lg font-semibold text-slate-50 transition group-hover:text-cyan-400">
           {movie.title}
         </h3>
         <div className="flex items-center justify-between text-sm text-slate-400">
-          <p>{movie.release_date || "Release date TBD"}</p>
+          <p>
+            {movie.release_date
+              ? movie.release_date.slice(0, 4)
+              : "Release date TBD"}
+          </p>
           <div className="inline-flex items-center gap-1 rounded-full border border-amber-300/40 bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-200">
             <span>⭐</span>
             <span>{rating}</span>
