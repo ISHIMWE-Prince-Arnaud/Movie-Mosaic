@@ -9,21 +9,16 @@ function Home() {
   const [error, setError] = useState(null);
 
   const performSearch = useCallback(async (query) => {
-    if (!query) {
-      try {
+    try {
+      setLoading(true);
+
+      if (!query) {
         const popularMovies = await getPopularMovies();
         setMovies(popularMovies);
         setError(null);
-      } catch (error) {
-        console.error(error);
-        setError("Failed to load movies");
-        setMovies([]);
+        return;
       }
-      return;
-    }
 
-    try {
-      setLoading(true);
       const results = await searchMovies(query);
 
       if (results.length > 0) {
@@ -35,7 +30,11 @@ function Home() {
       }
     } catch (error) {
       console.error(error);
-      setError("Search failed");
+      if (!query) {
+        setError("Failed to load movies");
+      } else {
+        setError("Search failed");
+      }
       setMovies([]);
     } finally {
       setLoading(false);
