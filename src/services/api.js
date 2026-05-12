@@ -66,3 +66,44 @@ export const getMoviesByGenre = async (genreId) => {
     throw error;
   }
 };
+
+export const getMovieDetails = async (movieId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}?api_key=${getApiKey()}&language=en-US`,
+    );
+    if (!response.ok) throw new Error("Failed to fetch movie details");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    throw error;
+  }
+};
+
+export const getMovieCredits = async (movieId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/credits?api_key=${getApiKey()}&language=en-US`,
+    );
+    if (!response.ok) throw new Error("Failed to fetch movie credits");
+    const data = await response.json();
+    return data.cast;
+  } catch (error) {
+    console.error("Error fetching movie credits:", error);
+    throw error;
+  }
+};
+
+export const getSimilarMovies = async (movieId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/similar?api_key=${getApiKey()}&language=en-US&page=1`,
+    );
+    if (!response.ok) throw new Error("Failed to fetch similar movies");
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error("Error fetching similar movies:", error);
+    throw error;
+  }
+};

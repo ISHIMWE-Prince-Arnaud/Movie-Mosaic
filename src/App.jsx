@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import { MovieProvider } from "./contexts/MovieContext";
 import GenrePage from "./components/GenrePage";
 import NotFound from "./pages/NotFound";
+import MovieDetail from "./pages/MovieDetail";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/favorite" element={<Favorite />} />
+            <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/genre/:slug" element={<GenrePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

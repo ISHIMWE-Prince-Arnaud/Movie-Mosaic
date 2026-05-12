@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useMovieContext } from "../contexts/MovieContext";
 import { getMovieVideos } from "../services/api";
@@ -77,7 +78,7 @@ function MovieCard({ movie }) {
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
-      <div className="relative aspect-[2/3] overflow-hidden bg-slate-800">
+      <Link to={`/movie/${movie.id}`} className="relative block aspect-[2/3] overflow-hidden bg-slate-800">
         <img
           src={posterSrc}
           alt={movie.title}
@@ -115,9 +116,9 @@ function MovieCard({ movie }) {
             </div>
           )}
         </div>
-      </div>
-      <div className="space-y-1 p-4">
-        <h3 className="line-clamp-2 text-lg font-semibold text-slate-50">
+      </Link>
+      <Link to={`/movie/${movie.id}`} className="block space-y-1 p-4 transition hover:bg-slate-800/50">
+        <h3 className="line-clamp-2 text-lg font-semibold text-slate-50 transition group-hover:text-cyan-400">
           {movie.title}
         </h3>
         <div className="flex items-center justify-between text-sm text-slate-400">
@@ -132,7 +133,7 @@ function MovieCard({ movie }) {
             )}
           </div>
         </div>
-      </div>
+      </Link>
 
       {trailerKey && (
         <div
