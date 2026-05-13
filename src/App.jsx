@@ -5,7 +5,7 @@ import { MovieProvider } from "./contexts/MovieContext";
 
 // Lazy load components for code splitting
 const Home = lazy(() => import("./pages/Home"));
-const Favorite = lazy(() => import("./pages/Favorite"));
+const Favorites = lazy(() => import("./pages/Favorites"));
 const GenrePage = lazy(() => import("./components/GenrePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
@@ -29,7 +29,7 @@ function App() {
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/favorite" element={<Favorite />} />
+              <Route path="/favorites" element={<Favorites />} />
               <Route path="/movie/:id" element={<MovieDetail />} />
               <Route path="/genre/:slug" element={<GenrePage />} />
               <Route path="*" element={<NotFound />} />

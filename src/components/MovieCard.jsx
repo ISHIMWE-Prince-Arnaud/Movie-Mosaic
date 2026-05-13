@@ -54,7 +54,10 @@ function MovieCard({ movie }) {
       const trailer = videos.find(
         (video) => video.type === "Trailer" && video.site === "YouTube",
       );
-      if (trailer) {
+      
+      const isValidYoutubeKey = (key) => /^[a-zA-Z0-9_-]{11}$/.test(key);
+
+      if (trailer && isValidYoutubeKey(trailer.key)) {
         setTrailerKey(trailer.key);
       } else {
         setTrailerKey(null);
@@ -101,8 +104,8 @@ function MovieCard({ movie }) {
           decoding="async"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
-        <div className="absolute inset-0 flex flex-col justify-between p-3 opacity-0 transition duration-300 group-hover:opacity-100">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 transition duration-300 group-hover:opacity-100 touch-visible" />
+        <div className="absolute inset-0 flex flex-col justify-between p-3 opacity-0 transition duration-300 group-hover:opacity-100 touch-visible">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1" /> {/* Spacer for balance */}
             <button
@@ -175,6 +178,7 @@ function MovieCard({ movie }) {
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
               allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-presentation"
               className="h-[60vh] w-full"
             />
           </div>

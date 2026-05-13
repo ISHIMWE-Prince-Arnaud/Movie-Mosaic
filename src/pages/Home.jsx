@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import MovieCard from "../components/MovieCard";
+import SkeletonCard from "../components/SkeletonCard";
 import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home() {
@@ -79,44 +80,58 @@ function Home() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3 rounded-2xl bg-slate-900/60 p-4 shadow-lg ring-1 ring-slate-800">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            type="text"
-            placeholder="Search movies..."
-            value={searchQuery}
-            onChange={handleInputChange}
-            className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
-          />
-          <button
-            className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg transition hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
-            onClick={handleSearchClick}>
-            Search
-          </button>
+    <div className="space-y-8">
+      <div className="flex flex-col gap-6">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
+            {searchQuery.trim() ? "Search Results" : "Popular Movies"}
+          </h1>
+          <p className="text-lg text-slate-400">
+            {searchQuery.trim() 
+              ? `Showing results for "${searchQuery}"`
+              : "Discover the most trending movies right now."}
+          </p>
         </div>
-        {loading && (
-          <div className="inline-flex items-center gap-2 text-sm text-amber-200">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            Searching...
+
+        <div className="flex flex-col gap-3 rounded-2xl bg-slate-900/60 p-4 shadow-lg ring-1 ring-slate-800">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
+              type="text"
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={handleInputChange}
+              aria-label="Search movies"
+              className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
+            />
+            <button
+              className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg transition hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+              onClick={handleSearchClick}>
+              Search
+            </button>
           </div>
-        )}
-        {error && (
-          <div className="rounded-lg border border-red-400/60 bg-red-500/10 px-3 py-2 text-sm text-red-100">
-            {error}
-          </div>
-        )}
-        {isEmpty && !error && (
-          <div className="rounded-lg border border-slate-600/60 bg-slate-800/50 px-3 py-2 text-sm text-slate-300">
-            No movies found
-          </div>
-        )}
+          {error && (
+            <div className="rounded-lg border border-red-400/60 bg-red-500/10 px-3 py-2 text-sm text-red-100">
+              {error}
+            </div>
+          )}
+          {isEmpty && !error && (
+            <div className="rounded-lg border border-slate-600/60 bg-slate-800/50 px-3 py-2 text-sm text-slate-300">
+              No movies found
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        {loading ? (
+          Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))
+        ) : (
+          movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))
+        )}
       </div>
     </div>
   );

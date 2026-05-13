@@ -37,7 +37,12 @@ function MovieDetail() {
         const trailer = videos.find(
           (video) => video.type === "Trailer" && video.site === "YouTube",
         );
-        if (trailer) setTrailerKey(trailer.key);
+        
+        const isValidYoutubeKey = (key) => /^[a-zA-Z0-9_-]{11}$/.test(key);
+
+        if (trailer && isValidYoutubeKey(trailer.key)) {
+          setTrailerKey(trailer.key);
+        }
       } catch (err) {
         setError("Failed to load movie details. Please try again later.");
         console.error(err);

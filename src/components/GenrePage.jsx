@@ -46,6 +46,7 @@ function GenrePage() {
             placeholder={genre.placeholder}
             value={searchQuery}
             onChange={handleInputChange}
+            aria-label={`Search ${genre.label} movies`}
             className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
           />
           <button

@@ -1,7 +1,7 @@
 import { useMovieContext } from "../contexts/MovieContext";
 import MovieCard from "../components/MovieCard";
 
-function Favorite() {
+function Favorites() {
   const { favorites } = useMovieContext();
 
   if (favorites.length > 0) {
@@ -9,7 +9,7 @@ function Favorite() {
       <div className="space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-amber-300">Favorite Movies</h1>
+            <h1 className="text-3xl font-bold text-slate-50">Favorites</h1>
             <p className="text-sm text-slate-400">
               You have {favorites.length} saved
               {favorites.length === 1 ? " movie" : " movies"}.
@@ -28,10 +28,11 @@ function Favorite() {
 
   return (
     <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-8 text-center">
-      <h1 className="text-2xl font-bold text-amber-300">No Favorite Movies Yet</h1>
-      <p className="text-slate-300">Start adding movies to your favorites.</p>
+      <div className="text-4xl">❤️</div>
+      <h1 className="text-2xl font-bold text-slate-50">No Favorites Yet</h1>
+      <p className="text-slate-400">Start adding movies to your favorites to see them here.</p>
     </div>
   );
 }
 
-export default Favorite;
+export default Favorites;

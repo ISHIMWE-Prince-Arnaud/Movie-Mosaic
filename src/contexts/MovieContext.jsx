@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
+import Toast from "../components/Toast";
 
 const MovieContext = createContext();
 
@@ -9,6 +10,7 @@ export const useMovieContext = () => useContext(MovieContext);
 
 export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
+  const [toast, setToast] = useState(null);
 
   // Load favorites from localStorage when the app starts
   useEffect(() => {
@@ -25,17 +27,32 @@ export const MovieProvider = ({ children }) => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
+  const showToast = useCallback((message) => {
+    setToast(message);
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Add a movie to favorites (prevent duplicates)
   const handleAddFavorite = (movie) => {
     setFavorites((favorites) => {
-      if (favoriteIds.has(movie.id)) return favorites; // Prevent duplicates using O(1) lookup
+      const isAlreadyFav = favorites.some((fav) => fav.id === movie.id);
+      if (isAlreadyFav) return favorites;
+      
+      showToast(`Added "${movie.title}" to favorites ❤️`);
       return [...favorites, movie];
     });
   };
 
   // Remove a movie from favorites
   const handleRemoveFavorite = (movieId) => {
-    setFavorites((favorites) => favorites.filter((fav) => fav.id !== movieId));
+    setFavorites((favorites) => {
+      const movieToRemove = favorites.find((fav) => fav.id === movieId);
+      if (movieToRemove) {
+        showToast(`Removed "${movieToRemove.title}" from favorites`);
+      }
+      return favorites.filter((fav) => fav.id !== movieId);
+    });
   };
 
   // Memoize favorite IDs for O(1) lookups
@@ -65,6 +82,7 @@ export const MovieProvider = ({ children }) => {
         isFavorite,
       }}>
       {children}
+      <Toast message={toast} onClose={() => setToast(null)} />
     </MovieContext.Provider>
   );
 };
