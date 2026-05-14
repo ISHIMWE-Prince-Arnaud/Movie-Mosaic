@@ -41,7 +41,7 @@ function GenrePage() {
   }
 
   return (
-    <div className="space-y-12 py-8">
+    <div className="space-y-12 py-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <h1 className="text-4xl font-black uppercase tracking-tighter text-white sm:text-5xl lg:text-6xl">

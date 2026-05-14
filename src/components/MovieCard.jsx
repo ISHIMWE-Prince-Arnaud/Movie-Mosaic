@@ -90,7 +90,7 @@ function MovieCard({ movie }) {
   };
 
   return (
-    <div className="glass-card group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+    <div className="glass-card group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:ring-2 hover:ring-cyan-400/30">
       <Link
         to={`/movie/${movie.id}`}
         className="relative block aspect-[2/3] overflow-hidden bg-slate-900">
@@ -108,10 +108,10 @@ function MovieCard({ movie }) {
         {/* Cinematic Overlay */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 touch-visible" />
         
-        <div className="absolute inset-0 flex flex-col justify-between p-4 opacity-0 transition-all duration-500 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 touch-visible">
+        <div className="absolute inset-0 flex flex-col justify-between p-5 opacity-0 transition-all duration-500 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 touch-visible">
           <div className="flex items-start justify-end">
             <button
-              className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all hover:scale-110 hover:border-cyan-400 active:scale-90 ${
+              className={`pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all hover:scale-110 hover:border-cyan-400 active:scale-90 ${
                 isMovieFavorite ? "text-cyan-400" : "text-white"
               }`}
               onClick={handleFavoriteClick}
@@ -131,7 +131,7 @@ function MovieCard({ movie }) {
           
           <div className="pointer-events-auto flex items-center justify-center">
             <button
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-2.5 text-xs font-black uppercase tracking-widest text-slate-950 shadow-lg transition-all hover:bg-cyan-400 hover:scale-105 active:scale-95 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950 shadow-lg transition-all hover:bg-cyan-400 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
               onClick={handleTrailerClick}
               disabled={isLoadingTrailer}
               aria-label="Watch trailer">
@@ -152,13 +152,13 @@ function MovieCard({ movie }) {
       
       <Link
         to={`/movie/${movie.id}`}
-        className="block space-y-2 p-5 transition-colors hover:bg-white/5">
-        <h3 className="line-clamp-1 text-sm font-black uppercase tracking-wider text-slate-100 transition-colors group-hover:text-cyan-400">
+        className="block space-y-2.5 p-5 transition-colors hover:bg-white/5">
+        <h3 className="line-clamp-1 text-[13px] font-black uppercase tracking-wider text-slate-100 transition-colors group-hover:text-cyan-400">
           {movie.title}
         </h3>
         
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
             {movie.release_date ? movie.release_date.slice(0, 4) : "TBD"}
           </span>
           

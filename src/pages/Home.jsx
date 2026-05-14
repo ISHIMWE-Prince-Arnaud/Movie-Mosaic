@@ -63,7 +63,7 @@ function Home() {
   const isEmpty = status === "success" && movies.length === 0;
 
   return (
-    <div className="pb-12">
+    <div className="pb-12 animate-in fade-in duration-700">
       {/* Cinematic Hero */}
       {!debouncedSearch && status === "success" && heroMovies.length > 0 && (
         <Hero movies={heroMovies} />
