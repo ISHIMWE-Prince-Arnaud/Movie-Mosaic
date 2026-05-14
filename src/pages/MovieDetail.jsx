@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -12,10 +12,19 @@ import { GENRES } from "../config/genres";
 
 function MovieDetail() {
   const { id } = useParams();
+  const [showTrailer, setShowTrailer] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  useEffect(() => {
+    if (showTrailer) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [showTrailer]);
 
   const { data: movie, isLoading: isMovieLoading, error: movieError } = useQuery({
     queryKey: ["movieDetails", id],
@@ -83,6 +92,29 @@ function MovieDetail() {
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
+      {/* Trailer Modal (Focus Mode) */}
+      {showTrailer && trailerKey && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 backdrop-blur-2xl p-4 sm:p-8 animate-in fade-in duration-300">
+          <button 
+            onClick={() => setShowTrailer(false)}
+            className="absolute top-6 right-6 h-12 w-12 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="w-full max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(6,182,212,0.3)] ring-1 ring-white/10">
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+              title={`${movie.title} Trailer`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative -mx-4 -mt-6 h-[70vh] min-h-[400px] overflow-hidden lg:-mx-8">
         {backdropUrl && (
@@ -128,12 +160,7 @@ function MovieDetail() {
             <div className="flex flex-wrap gap-4">
               {trailerKey && (
                 <button
-                  onClick={() =>
-                    window.open(
-                      `https://www.youtube.com/watch?v=${trailerKey}`,
-                      "_blank",
-                    )
-                  }
+                  onClick={() => setShowTrailer(true)}
                   className="inline-flex items-center gap-3 px-10 py-4 font-black text-xs uppercase tracking-[0.2em] text-slate-950 bg-white rounded-xl transition-all hover:bg-cyan-400 hover:scale-105 active:scale-95 shadow-2xl">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
@@ -172,26 +199,26 @@ function MovieDetail() {
             <div className="h-1 w-12 bg-cyan-500 rounded-full" />
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
             {cast.map((person) => (
               <div key={person.id} className="group flex flex-col items-center">
-                <div className="relative w-full aspect-square overflow-hidden rounded-2xl bg-slate-900 mb-4 border border-white/5 transition-all group-hover:border-cyan-500/50 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                <div className="relative w-28 h-28 overflow-hidden rounded-full bg-slate-900 mb-4 border-2 border-white/5 transition-all group-hover:border-cyan-400 group-hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] group-hover:scale-110">
                   <img
                     src={
                       person.profile_path
-                        ? `https://image.tmdb.org/t/p/w92${person.profile_path}`
-                        : "https://placehold.co/92x138?text=No+Image"
+                        ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                        : "https://placehold.co/185x185?text=No+Image"
                     }
                     alt={person.name}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                    className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
                   />
                 </div>
-                <h3 className="text-xs font-black text-slate-100 text-center uppercase tracking-wider line-clamp-1">
+                <h3 className="text-[11px] font-black text-slate-100 text-center uppercase tracking-widest line-clamp-1">
                   {person.name}
                 </h3>
-                <p className="text-[10px] font-bold text-slate-500 text-center uppercase tracking-[0.2em] line-clamp-1 mt-1">
+                <p className="text-[9px] font-bold text-slate-500 text-center uppercase tracking-[0.2em] line-clamp-1 mt-1">
                   {person.character}
                 </p>
               </div>
@@ -267,3 +294,4 @@ function MovieDetail() {
 }
 
 export default MovieDetail;
+

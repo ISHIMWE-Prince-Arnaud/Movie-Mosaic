@@ -23,9 +23,10 @@ const LoadingFallback = () => (
 function App() {
   return (
     <MovieProvider>
-      <div className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="relative min-h-screen bg-slate-950 text-slate-100">
+        <div className="grain-overlay" />
         <NavBar />
-        <main className="mx-auto max-w-6xl px-4 pb-12 pt-6">
+        <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8">
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />

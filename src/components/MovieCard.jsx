@@ -90,10 +90,10 @@ function MovieCard({ movie }) {
   };
 
   return (
-    <div className="glass-card group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:ring-2 hover:ring-cyan-400/30">
+    <div className="glass-card group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-[1.05] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:ring-2 hover:ring-cyan-400/30">
       <Link
         to={`/movie/${movie.id}`}
-        className="relative block aspect-[2/3] overflow-hidden bg-slate-900">
+        className="relative block aspect-[2/3] overflow-hidden bg-slate-900 poster-shadow">
         <img
           src={posterSrc}
           srcSet={posterSrcSet}
