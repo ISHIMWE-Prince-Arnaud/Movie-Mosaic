@@ -1,94 +1,72 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 import MovieCard from "../components/MovieCard";
 import SkeletonCard from "../components/SkeletonCard";
 import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [isEmpty, setIsEmpty] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const { ref, inView } = useInView();
 
-  const performSearch = useCallback(async (query, signal) => {
-    try {
-      setLoading(true);
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchInput.trim());
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchInput]);
 
-      if (!query) {
-        const popularMovies = await getPopularMovies(signal);
-        // Don't update state if request was aborted
-        if (!signal?.aborted) {
-          setMovies(popularMovies);
-          setError(null);
-        }
-        return;
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: debouncedSearch ? ["searchMovies", debouncedSearch] : ["popularMovies"],
+    queryFn: ({ pageParam = 1, signal }) => {
+      if (debouncedSearch) {
+        return searchMovies({ query: debouncedSearch, pageParam, signal });
       }
-
-      const results = await searchMovies(query, signal);
-
-      // Don't update state if request was aborted
-      if (!signal?.aborted) {
-        if (results.length > 0) {
-          setMovies(results);
-          setError(null);
-          setIsEmpty(false);
-        } else {
-          setMovies([]);
-          setError(null);
-          setIsEmpty(true);
-        }
+      return getPopularMovies({ pageParam, signal });
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
       }
-    } catch (error) {
-      // Don't update state if request was aborted
-      if (!signal?.aborted) {
-        console.error(error);
-        if (!query) {
-          setError("Failed to load movies");
-        } else {
-          setError("Search failed");
-        }
-        setMovies([]);
-        setIsEmpty(false);
-      }
-    } finally {
-      // Don't update state if request was aborted
-      if (!signal?.aborted) {
-        setLoading(false);
-      }
-    }
-  }, []);
+      return undefined;
+    },
+    initialPageParam: 1,
+  });
 
   useEffect(() => {
-    const controller = new AbortController();
-    const handler = setTimeout(
-      () => performSearch(searchQuery.trim(), controller.signal),
-      300,
-    );
-    return () => {
-      clearTimeout(handler);
-      controller.abort();
-    };
-  }, [searchQuery, performSearch]);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleInputChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchInput(e.target.value);
   };
 
-  const handleSearchClick = () => {
-    const controller = new AbortController();
-    performSearch(searchQuery.trim(), controller.signal);
-  };
+  const movies = data?.pages.flatMap((page) => page.results) || [];
+  const isEmpty = status === "success" && movies.length === 0;
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
-            {searchQuery.trim() ? "Search Results" : "Popular Movies"}
+            {debouncedSearch ? "Search Results" : "Popular Movies"}
           </h1>
           <p className="text-lg text-slate-400">
-            {searchQuery.trim() 
-              ? `Showing results for "${searchQuery}"`
+            {debouncedSearch 
+              ? `Showing results for "${debouncedSearch}"`
               : "Discover the most trending movies right now."}
           </p>
         </div>
@@ -98,23 +76,18 @@ function Home() {
             <input
               type="text"
               placeholder="Search movies..."
-              value={searchQuery}
+              value={searchInput}
               onChange={handleInputChange}
               aria-label="Search movies"
               className="w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 shadow-inner outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-300/40"
             />
-            <button
-              className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg transition hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
-              onClick={handleSearchClick}>
-              Search
-            </button>
           </div>
-          {error && (
+          {status === "error" && (
             <div className="rounded-lg border border-red-400/60 bg-red-500/10 px-3 py-2 text-sm text-red-100">
-              {error}
+              {error.message || "An error occurred while fetching movies."}
             </div>
           )}
-          {isEmpty && !error && (
+          {isEmpty && (
             <div className="rounded-lg border border-slate-600/60 bg-slate-800/50 px-3 py-2 text-sm text-slate-300">
               No movies found
             </div>
@@ -123,16 +96,17 @@ function Home() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {loading ? (
+        {movies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+        {(isFetching || isFetchingNextPage) &&
           Array.from({ length: 8 }).map((_, i) => (
-            <SkeletonCard key={i} />
-          ))
-        ) : (
-          movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))
-        )}
+            <SkeletonCard key={`skeleton-${i}`} />
+          ))}
       </div>
+      
+      {/* Invisible element to trigger intersection observer */}
+      <div ref={ref} className="h-10 w-full" />
     </div>
   );
 }

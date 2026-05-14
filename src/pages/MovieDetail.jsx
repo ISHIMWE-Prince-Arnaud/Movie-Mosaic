@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   getMovieDetails,
   getMovieCredits,
@@ -11,49 +12,33 @@ import { GENRES } from "../config/genres";
 
 function MovieDetail() {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [cast, setCast] = useState([]);
-  const [similar, setSimilar] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [trailerKey, setTrailerKey] = useState(null);
 
   useEffect(() => {
-    const fetchMovieData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [details, credits, similarMovies, videos] = await Promise.all([
-          getMovieDetails(id),
-          getMovieCredits(id),
-          getSimilarMovies(id),
-          getMovieVideos(id),
-        ]);
-
-        setMovie(details);
-        setCast(credits.slice(0, 10)); // Show top 10 cast
-        setSimilar(similarMovies.slice(0, 6)); // Show top 6 similar
-
-        const trailer = videos.find(
-          (video) => video.type === "Trailer" && video.site === "YouTube",
-        );
-        
-        const isValidYoutubeKey = (key) => /^[a-zA-Z0-9_-]{11}$/.test(key);
-
-        if (trailer && isValidYoutubeKey(trailer.key)) {
-          setTrailerKey(trailer.key);
-        }
-      } catch (err) {
-        setError("Failed to load movie details. Please try again later.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMovieData();
     window.scrollTo(0, 0);
   }, [id]);
+
+  const { data: movie, isLoading: isMovieLoading, error: movieError } = useQuery({
+    queryKey: ["movieDetails", id],
+    queryFn: () => getMovieDetails(id),
+  });
+
+  const { data: credits, isLoading: isCreditsLoading } = useQuery({
+    queryKey: ["movieCredits", id],
+    queryFn: () => getMovieCredits(id),
+  });
+
+  const { data: similarMovies, isLoading: isSimilarLoading } = useQuery({
+    queryKey: ["similarMovies", id],
+    queryFn: () => getSimilarMovies(id),
+  });
+
+  const { data: videos, isLoading: isVideosLoading } = useQuery({
+    queryKey: ["movieVideos", id],
+    queryFn: () => getMovieVideos(id),
+  });
+
+  const loading = isMovieLoading || isCreditsLoading || isSimilarLoading || isVideosLoading;
+  const error = movieError ? "Failed to load movie details. Please try again later." : null;
 
   if (loading) {
     return (
@@ -77,6 +62,15 @@ function MovieDetail() {
       </div>
     );
   }
+
+  const cast = credits?.slice(0, 10) || [];
+  const similar = similarMovies?.slice(0, 6) || [];
+  
+  const trailer = videos?.find(
+    (video) => video.type === "Trailer" && video.site === "YouTube",
+  );
+  const isValidYoutubeKey = (key) => /^[a-zA-Z0-9_-]{11}$/.test(key);
+  const trailerKey = trailer && isValidYoutubeKey(trailer.key) ? trailer.key : null;
 
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
