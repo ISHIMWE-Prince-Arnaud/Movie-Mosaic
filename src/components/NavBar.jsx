@@ -6,6 +6,16 @@ function NavBar() {
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close mobile menu when location changes
   useEffect(() => {
@@ -36,21 +46,29 @@ function NavBar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <div className="text-lg font-bold tracking-tight text-amber-300">
-          <Link to="/">Movie Mosaic</Link>
+    <nav
+      className={`sticky top-0 z-50 border-b transition-all duration-500 ${
+        scrolled ? "nav-solid py-3" : "nav-transparent py-5"
+      }`}>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8">
+        <div className="group relative">
+          <Link
+            to="/"
+            className="text-2xl font-black tracking-tighter text-white transition-all hover:scale-105 active:scale-95">
+            MOVIE <span className="text-cyan-400 text-glow">MOSAIC</span>
+          </Link>
+          <div className="absolute -bottom-1 left-0 h-0.5 w-0 bg-cyan-400 transition-all group-hover:w-full" />
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center gap-3 text-sm font-semibold text-slate-200 md:flex">
+        <div className="hidden items-center gap-2 text-[13px] font-bold uppercase tracking-widest text-slate-300 md:flex">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `rounded-lg px-3 py-2 transition hover:text-amber-300 ${
-                  isActive ? "bg-slate-800 text-amber-200" : ""
+                `rounded-full px-4 py-2 transition-all hover:bg-white/5 hover:text-white ${
+                  isActive ? "bg-white/10 text-cyan-400" : ""
                 }`
               }>
               {link.label}
@@ -58,7 +76,7 @@ function NavBar() {
           ))}
 
           <div
-            className="relative"
+            className="relative ml-2"
             onMouseEnter={() => setIsDropdownOpen(true)}
             onMouseLeave={() => setIsDropdownOpen(false)}
             onFocus={() => setIsDropdownOpen(true)}
@@ -68,14 +86,28 @@ function NavBar() {
               }
             }}>
             <button
-              className="inline-flex items-center gap-1 rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-slate-200 transition hover:border-amber-300 hover:text-amber-200"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300 transition-all hover:border-cyan-400/50 hover:text-white"
               aria-haspopup="true"
               aria-expanded={isDropdownOpen}>
-              {getCurrentGenreLabel()} ▾
+              {getCurrentGenreLabel()}
+              <svg
+                className={`h-4 w-4 transition-transform duration-300 ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </button>
             {isDropdownOpen && (
               <div
-                className="absolute right-0 mt-2 grid min-w-[180px] gap-1 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl"
+                className="absolute right-0 mt-3 grid min-w-[200px] gap-1 rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200"
                 role="menu">
                 {GENRES.filter(
                   (genre) =>
@@ -88,8 +120,8 @@ function NavBar() {
                     to={`/genre/${genre.slug}`}
                     role="menuitem"
                     className={({ isActive }) =>
-                      `rounded-lg px-3 py-2 text-left text-sm transition hover:bg-slate-800 hover:text-amber-200 ${
-                        isActive ? "bg-slate-800 text-amber-200" : ""
+                      `rounded-xl px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider transition-all hover:bg-white/5 hover:text-cyan-400 ${
+                        isActive ? "bg-white/10 text-cyan-400" : ""
                       }`
                     }
                     onClick={() => handleGenreSelect()}>
@@ -103,7 +135,7 @@ function NavBar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="rounded-lg p-2 text-slate-200 hover:bg-slate-800 md:hidden"
+          className="rounded-full p-2 text-slate-200 transition-all hover:bg-white/5 md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu">
           {isMobileMenuOpen ? (
@@ -138,28 +170,28 @@ function NavBar() {
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="border-t border-slate-800 bg-slate-950/95 p-4 md:hidden">
-          <div className="flex flex-col gap-2">
+        <div className="border-t border-white/5 bg-slate-950/95 p-6 backdrop-blur-2xl md:hidden animate-in slide-in-from-top-4 duration-300">
+          <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `rounded-lg px-4 py-3 text-sm font-semibold transition ${
+                  `rounded-xl px-4 py-4 text-sm font-bold uppercase tracking-widest transition-all ${
                     isActive
-                      ? "bg-slate-800 text-amber-200"
-                      : "text-slate-200 hover:bg-slate-900 hover:text-amber-300"
+                      ? "bg-white/10 text-cyan-400"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white"
                   }`
                 }>
                 {link.label}
               </NavLink>
             ))}
             
-            <div className="mt-4 border-t border-slate-800 pt-4">
-              <p className="mb-2 px-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+            <div className="mt-6 border-t border-white/5 pt-6">
+              <p className="mb-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                 Other Genres
               </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {GENRES.filter(
                   (genre) =>
                     !["action", "thriller", "sci-fi", "crime"].includes(
@@ -170,10 +202,10 @@ function NavBar() {
                     key={genre.slug}
                     to={`/genre/${genre.slug}`}
                     className={({ isActive }) =>
-                      `rounded-lg px-4 py-2 text-sm transition ${
+                      `rounded-xl px-4 py-3 text-[11px] font-bold uppercase tracking-wider transition-all ${
                         isActive
-                          ? "bg-slate-800 text-amber-200"
-                          : "text-slate-200 hover:bg-slate-900 hover:text-amber-300"
+                          ? "bg-white/10 text-cyan-400"
+                          : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`
                     }>
                     {genre.label}
