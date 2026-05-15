@@ -12,10 +12,10 @@ const MovieDetail = lazy(() => import("./pages/MovieDetail"));
 
 // Loading fallback component
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center py-12">
-    <div className="flex items-center gap-3 text-amber-200">
-      <span className="h-6 w-6 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-      <span>Loading...</span>
+  <div className="flex items-center justify-center py-24">
+    <div className="flex flex-col items-center gap-4 text-cyan-400">
+      <span className="h-10 w-10 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+      <span className="text-[10px] font-black uppercase tracking-[0.4em]">Cinematic Loading</span>
     </div>
   </div>
 );
@@ -23,8 +23,7 @@ const LoadingFallback = () => (
 function App() {
   return (
     <MovieProvider>
-      <div className="relative min-h-screen bg-slate-950 text-slate-100">
-        <div className="grain-overlay" />
+      <div className="relative min-h-screen">
         <NavBar />
         <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8">
           <Suspense fallback={<LoadingFallback />}>
